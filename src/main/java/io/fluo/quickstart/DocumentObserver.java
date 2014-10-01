@@ -40,13 +40,25 @@ public class DocumentObserver extends TypedObserver {
 
   @Override
   public void process(TypedTransactionBase tx, Bytes row, Column column) {
-    String content = tx.get().row(row).col(column).toString();
+
+    // This method is called by Fluo whenever another transaction modifies the
+    // 'doc':'content' column. This method will extract the words from the
+    // document at the specified row, and update the global counts for those
+    // words.
+
+    // This code does not handle high cardinality words well. The fluo
+    // phrasecount example has handling for this case.
+
+    String docContent = tx.get().row(row).col(column).toString();
 
     ArrayList<String> wordRows = new ArrayList<>();
-    for (String word : content.split("[ ]+"))
+    for (String word : docContent.split("[ ]+"))
       wordRows.add("word:" + word);
 
     Map<String,Map<Column,Value>> counts = tx.get().rowsString(wordRows).columns(COUNT_COL).toStringMap();
+
+    // TODO this code does not properly handle a document with the same word
+    // multiple times. Fixing this is left as an exercise to the reader.
 
     for (String wordRow : wordRows) {
       int count = counts.get(wordRow).get(COUNT_COL).toInteger(0);
@@ -56,6 +68,10 @@ public class DocumentObserver extends TypedObserver {
 
   @Override
   public ObservedColumn getObservedColumn() {
+
+    // This method is called by Fluo, during initialization, to determine which
+    // column is being Observed.
+
     return new ObservedColumn(CONTENT_COL, NotificationType.STRONG);
   }
 }
