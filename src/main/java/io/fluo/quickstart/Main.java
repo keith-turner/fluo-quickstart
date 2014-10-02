@@ -99,8 +99,8 @@ public class Main {
 
       System.out.println("Adding documents ...");
 
-      addDocument(fluoClient, "00001", "hello world welcome to the fluo kickstart the first one in the entire world");
-      addDocument(fluoClient, "00001", "hola world welcome to the fluo kickstart the first one in the entire world");
+      addDocument(fluoClient, "00001", "hello world welcome to the fluo quickstart the first one in the entire world");
+      addDocument(fluoClient, "00001", "hola world welcome to the fluo quickstart the first one in the entire world");
       addDocument(fluoClient, "00002", "hola world");
 
       System.out.println("Reading documents ...");
@@ -121,7 +121,8 @@ public class Main {
       // exercise for reader. Suggest adding a column which indicates a documents
       // should be deleted by observer. For bonus points, handle the case where
       // document not yet processed by observer is deleted, need to keep info about
-      // document status.
+      // document status. Also, updating documents when contents change is not
+      // handled.
 
       // deleteDocument("00001");
       // addDocument(fluoClient, "00003", "ciao world");

@@ -16,7 +16,6 @@
 
 package io.fluo.quickstart;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import io.fluo.api.data.Bytes;
@@ -24,6 +23,7 @@ import io.fluo.api.data.Column;
 import io.fluo.api.types.TypedObserver;
 import io.fluo.api.types.TypedSnapshotBase.Value;
 import io.fluo.api.types.TypedTransactionBase;
+import org.apache.commons.collections4.map.DefaultedMap;
 
 /**
  * A simple observer that updates word counts when a documents contents are updated.
@@ -51,22 +51,21 @@ public class DocumentObserver extends TypedObserver {
 
     String docContent = tx.get().row(row).col(column).toString();
 
-    Map<String, Integer> wordRowsMap = new HashMap<>();
+    // compute how many times each word occurs in document
+    Map<String,Integer> docCounts = new DefaultedMap<>(Integer.valueOf(0));
     for (String word : docContent.split("[ ]+")) {
       String wordRow = "word: " + word;
-      Integer count = wordRowsMap.get(wordRow);
-      if(count == null)
-        count = 0;
-      count+= 1;
-
-      wordRowsMap.put(wordRow, count);
+      docCounts.put(wordRow, docCounts.get(wordRow) + 1);
     }
 
-    Map<String,Map<Column,Value>> counts = tx.get().rowsString(wordRowsMap.keySet()).columns(COUNT_COL).toStringMap();
+    Map<String,Map<Column,Value>> globalCounts = tx.get().rowsString(docCounts.keySet()).columns(COUNT_COL).toStringMap();
 
-    for (String wordRow : wordRowsMap.keySet()) {
-      int count = counts.get(wordRow).get(COUNT_COL).toInteger(0);
-      tx.mutate().row(wordRow).col(COUNT_COL).set(count + wordRowsMap.get(wordRow));
+    // update global word counts
+    for (String wordRow : docCounts.keySet()) {
+      // Fluo TypeLayer returns defaulted maps, so no need to check if row exist
+      // then check if column exist.
+      int count = globalCounts.get(wordRow).get(COUNT_COL).toInteger(0);
+      tx.mutate().row(wordRow).col(COUNT_COL).set(count + docCounts.get(wordRow));
     }
   }
 
