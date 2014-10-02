@@ -99,8 +99,8 @@ public class Main {
 
       System.out.println("Adding documents ...");
 
-      addDocument(fluoClient, "00001", "hello world");
-      addDocument(fluoClient, "00001", "hello world");
+      addDocument(fluoClient, "00001", "hello world welcome to the fluo kickstart the first one in the entire world");
+      addDocument(fluoClient, "00001", "hola world welcome to the fluo kickstart the first one in the entire world");
       addDocument(fluoClient, "00002", "hola world");
 
       System.out.println("Reading documents ...");

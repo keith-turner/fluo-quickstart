@@ -16,7 +16,7 @@
 
 package io.fluo.quickstart;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import io.fluo.api.data.Bytes;
@@ -51,18 +51,22 @@ public class DocumentObserver extends TypedObserver {
 
     String docContent = tx.get().row(row).col(column).toString();
 
-    ArrayList<String> wordRows = new ArrayList<>();
-    for (String word : docContent.split("[ ]+"))
-      wordRows.add("word:" + word);
+    Map<String, Integer> wordRowsMap = new HashMap<>();
+    for (String word : docContent.split("[ ]+")) {
+      String wordRow = "word: " + word;
+      Integer count = wordRowsMap.get(wordRow);
+      if(count == null)
+        count = 0;
+      count+= 1;
 
-    Map<String,Map<Column,Value>> counts = tx.get().rowsString(wordRows).columns(COUNT_COL).toStringMap();
+      wordRowsMap.put(wordRow, count);
+    }
 
-    // TODO this code does not properly handle a document with the same word
-    // multiple times. Fixing this is left as an exercise to the reader.
+    Map<String,Map<Column,Value>> counts = tx.get().rowsString(wordRowsMap.keySet()).columns(COUNT_COL).toStringMap();
 
-    for (String wordRow : wordRows) {
+    for (String wordRow : wordRowsMap.keySet()) {
       int count = counts.get(wordRow).get(COUNT_COL).toInteger(0);
-      tx.mutate().row(wordRow).col(COUNT_COL).set(count + 1);
+      tx.mutate().row(wordRow).col(COUNT_COL).set(count + wordRowsMap.get(wordRow));
     }
   }
 
