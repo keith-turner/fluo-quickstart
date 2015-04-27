@@ -4,11 +4,13 @@ fluo-quickstart
 A simple word count example using Fluo.  In order to run this example, clone
 this repo and then execute the following maven commands.
 
-```
+```bash
 git clone https://github.com/fluo-io/fluo-quickstart.git
 cd fluo-quickstart
 mvn package
-mvn exec:java -Dexec.mainClass=io.fluo.quickstart.Main -Dexec.cleanupDaemonThreads=false
+#use test classpath to pick up log4j props.  Want to avoid including log4j props
+#in jar, so the log4j props were not placed in src/main/resources.
+mvn exec:java -Dexec.mainClass=io.fluo.quickstart.Main -Dexec.cleanupDaemonThreads=false -Dexec.classpathScope=test
 ```
 
 The [Main][1] class does all of the heavy lifting.  It starts MiniFluo, adds
