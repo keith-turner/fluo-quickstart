@@ -8,8 +8,10 @@ this repo and then execute the following maven commands.
 git clone https://github.com/fluo-io/fluo-quickstart.git
 cd fluo-quickstart
 mvn package
-#use test classpath to pick up log4j props.  Want to avoid including log4j props
-#in jar, so the log4j props were not placed in src/main/resources.
+#use test scope to pick up log4j props and mini Fluo.  Want to avoid including
+#log4j props in jar, so the log4j props were not placed in src/main/resources.
+#Want to avoid mini Fluo as a regular dependency because it depends on server
+#Accumulo and Hadoop artifacts.
 mvn exec:java -Dexec.mainClass=io.fluo.quickstart.Main -Dexec.cleanupDaemonThreads=false -Dexec.classpathScope=test
 ```
 
