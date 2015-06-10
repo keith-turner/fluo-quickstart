@@ -16,10 +16,16 @@
 
 package io.fluo.quickstart;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.apache.commons.io.FileUtils;
+
+import com.google.common.io.Files;
+import io.fluo.api.mini.MiniFluo;
+import io.fluo.api.config.FluoConfiguration;
 import io.fluo.api.client.FluoClient;
 import io.fluo.api.client.FluoFactory;
 import io.fluo.api.client.Snapshot;
@@ -32,7 +38,6 @@ import io.fluo.api.iterator.ColumnIterator;
 import io.fluo.api.iterator.RowIterator;
 import io.fluo.api.types.TypedSnapshot;
 import io.fluo.api.types.TypedTransaction;
-
 import static io.fluo.quickstart.DocumentObserver.CONTENT_COL;
 
 /**
@@ -92,8 +97,15 @@ public class Main {
     List<ObserverConfiguration> observers = new ArrayList<>();
     observers.add(new ObserverConfiguration(DocumentObserver.class.getName()));
 
+    File miniAccumuloDir = Files.createTempDir();
+
+    FluoConfiguration config = new FluoConfiguration();
+    config.setObservers(observers);
+    config.setApplicationName("quick-start");
+    config.setMiniDataDir(miniAccumuloDir.getAbsolutePath());
+
     // Use try with resources to ensure that FluoClient is closed.
-    try (MiniHelper miniHelper = new MiniHelper(observers); FluoClient fluoClient = FluoFactory.newClient(miniHelper.getConnectionConfig())) {
+    try (MiniFluo mini = FluoFactory.newMiniFluo(config); FluoClient fluoClient = FluoFactory.newClient(mini.getClientConfiguration())) {
       // TODO could use a LoaderExecutor to load documents using multiple
       // threads. Left as an exercise to reader.
 
@@ -112,7 +124,7 @@ public class Main {
       System.out.println("Waiting for observer ...");
 
       // wait for observer to run and update counts
-      miniHelper.getMiniFluo().waitForObservers();
+      mini.waitForObservers();
 
       System.out.println("Printing word counts...");
       printWordCounts(fluoClient);
@@ -133,6 +145,7 @@ public class Main {
       System.out.println("\nStopping Mini ...\n");
     }
 
+    FileUtils.deleteQuietly(miniAccumuloDir);
   }
 
 
