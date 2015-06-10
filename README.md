@@ -19,7 +19,7 @@ Finally, run the Fluo application using Maven:
 
 The quickstart [Main] class does all of the heavy lifting.  It starts a local Fluo instance (called MiniFluo),
 adds documents, waits for the [DocumentObserver] to finish processing all documents, and then prints
-out the word counts of the loaded documents.  It finally shutdowns MiniFluo before exiting.  It may help to
+out the word counts of the loaded documents.  It finally shuts down MiniFluo before exiting.  It may help to
 reference the [API javadocs][api] while you are learning the Fluo API.
 
 This example is intentionally not comprehensive to keep it short and provide you an opportunity to experiment.
