@@ -17,18 +17,13 @@
 package io.fluo.quickstart;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map.Entry;
 
-import org.apache.commons.io.FileUtils;
-
 import com.google.common.io.Files;
-import io.fluo.api.mini.MiniFluo;
-import io.fluo.api.config.FluoConfiguration;
 import io.fluo.api.client.FluoClient;
 import io.fluo.api.client.FluoFactory;
 import io.fluo.api.client.Snapshot;
+import io.fluo.api.config.FluoConfiguration;
 import io.fluo.api.config.ObserverConfiguration;
 import io.fluo.api.config.ScannerConfiguration;
 import io.fluo.api.data.Bytes;
@@ -36,8 +31,11 @@ import io.fluo.api.data.Column;
 import io.fluo.api.data.Span;
 import io.fluo.api.iterator.ColumnIterator;
 import io.fluo.api.iterator.RowIterator;
+import io.fluo.api.mini.MiniFluo;
 import io.fluo.api.types.TypedSnapshot;
 import io.fluo.api.types.TypedTransaction;
+import org.apache.commons.io.FileUtils;
+
 import static io.fluo.quickstart.DocumentObserver.CONTENT_COL;
 
 /**
@@ -92,18 +90,15 @@ public class Main {
 
   public static void main(String[] args) throws Exception {
 
-    System.out.println("\nStarting Mini ...");
-
-    List<ObserverConfiguration> observers = new ArrayList<>();
-    observers.add(new ObserverConfiguration(DocumentObserver.class.getName()));
-
     File miniAccumuloDir = Files.createTempDir();
 
     FluoConfiguration config = new FluoConfiguration();
-    config.setObservers(observers);
+    config.addObserver(new ObserverConfiguration(DocumentObserver.class.getName()));
     config.setApplicationName("quick-start");
     config.setMiniDataDir(miniAccumuloDir.getAbsolutePath());
 
+
+    System.out.println("\nStarting Mini ...");
     // Use try with resources to ensure that FluoClient is closed.
     try (MiniFluo mini = FluoFactory.newMiniFluo(config); FluoClient fluoClient = FluoFactory.newClient(mini.getClientConfiguration())) {
       // TODO could use a LoaderExecutor to load documents using multiple

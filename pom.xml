@@ -12,8 +12,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <accumulo.version>1.6.2</accumulo.version>
-    <fluo.version>1.0.0-beta-1</fluo.version>
+    <accumulo.version>1.6.4</accumulo.version>
+    <fluo.version>1.0.0-beta-2</fluo.version>
   </properties>
 
   <build>
