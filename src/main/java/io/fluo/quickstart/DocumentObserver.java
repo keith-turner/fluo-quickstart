@@ -1,29 +1,27 @@
 /*
  * Copyright 2014 Fluo authors (see AUTHORS)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package io.fluo.quickstart;
 
 import java.util.Map;
 
-import io.fluo.api.data.Bytes;
-import io.fluo.api.data.Column;
-import io.fluo.api.types.TypedObserver;
-import io.fluo.api.types.TypedSnapshotBase.Value;
-import io.fluo.api.types.TypedTransactionBase;
 import org.apache.commons.collections4.map.DefaultedMap;
+import org.apache.fluo.api.data.Bytes;
+import org.apache.fluo.api.data.Column;
+import org.apache.fluo.api.types.TypedObserver;
+import org.apache.fluo.api.types.TypedSnapshotBase.Value;
+import org.apache.fluo.api.types.TypedTransactionBase;
 
 /**
  * A simple observer that updates word counts when a documents contents are updated.
@@ -52,13 +50,14 @@ public class DocumentObserver extends TypedObserver {
     String docContent = tx.get().row(row).col(column).toString();
 
     // compute how many times each word occurs in document
-    Map<String,Integer> docCounts = new DefaultedMap<>(Integer.valueOf(0));
+    Map<String, Integer> docCounts = new DefaultedMap<>(Integer.valueOf(0));
     for (String word : docContent.split("[ ]+")) {
       String wordRow = "word: " + word;
       docCounts.put(wordRow, docCounts.get(wordRow) + 1);
     }
 
-    Map<String,Map<Column,Value>> globalCounts = tx.get().rowsString(docCounts.keySet()).columns(COUNT_COL).toStringMap();
+    Map<String, Map<Column, Value>> globalCounts =
+        tx.get().rowsString(docCounts.keySet()).columns(COUNT_COL).toStringMap();
 
     // update global word counts
     for (String wordRow : docCounts.keySet()) {

@@ -1,17 +1,15 @@
 /*
  * Copyright 2014 Fluo authors (see AUTHORS)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package io.fluo.quickstart;
@@ -20,21 +18,21 @@ import java.io.File;
 import java.util.Map.Entry;
 
 import com.google.common.io.Files;
-import io.fluo.api.client.FluoClient;
-import io.fluo.api.client.FluoFactory;
-import io.fluo.api.client.Snapshot;
-import io.fluo.api.config.FluoConfiguration;
-import io.fluo.api.config.ObserverConfiguration;
-import io.fluo.api.config.ScannerConfiguration;
-import io.fluo.api.data.Bytes;
-import io.fluo.api.data.Column;
-import io.fluo.api.data.Span;
-import io.fluo.api.iterator.ColumnIterator;
-import io.fluo.api.iterator.RowIterator;
-import io.fluo.api.mini.MiniFluo;
-import io.fluo.api.types.TypedSnapshot;
-import io.fluo.api.types.TypedTransaction;
 import org.apache.commons.io.FileUtils;
+import org.apache.fluo.api.client.FluoClient;
+import org.apache.fluo.api.client.FluoFactory;
+import org.apache.fluo.api.client.Snapshot;
+import org.apache.fluo.api.config.FluoConfiguration;
+import org.apache.fluo.api.config.ObserverConfiguration;
+import org.apache.fluo.api.config.ScannerConfiguration;
+import org.apache.fluo.api.data.Bytes;
+import org.apache.fluo.api.data.Column;
+import org.apache.fluo.api.data.Span;
+import org.apache.fluo.api.iterator.ColumnIterator;
+import org.apache.fluo.api.iterator.RowIterator;
+import org.apache.fluo.api.mini.MiniFluo;
+import org.apache.fluo.api.types.TypedSnapshot;
+import org.apache.fluo.api.types.TypedTransaction;
 
 import static io.fluo.quickstart.DocumentObserver.CONTENT_COL;
 
@@ -77,10 +75,10 @@ public class Main {
       RowIterator rowIter = snapshot.get(scanConfig);
 
       while (rowIter.hasNext()) {
-        Entry<Bytes,ColumnIterator> row = rowIter.next();
+        Entry<Bytes, ColumnIterator> row = rowIter.next();
         ColumnIterator colIter = row.getValue();
         while (colIter.hasNext()) {
-          Entry<Column,Bytes> column = colIter.next();
+          Entry<Column, Bytes> column = colIter.next();
           System.out.println(row.getKey() + " " + column.getValue());
         }
       }
@@ -100,14 +98,17 @@ public class Main {
 
     System.out.println("\nStarting Mini ...");
     // Use try with resources to ensure that FluoClient is closed.
-    try (MiniFluo mini = FluoFactory.newMiniFluo(config); FluoClient fluoClient = FluoFactory.newClient(mini.getClientConfiguration())) {
+    try (MiniFluo mini = FluoFactory.newMiniFluo(config);
+        FluoClient fluoClient = FluoFactory.newClient(mini.getClientConfiguration())) {
       // TODO could use a LoaderExecutor to load documents using multiple
       // threads. Left as an exercise to reader.
 
       System.out.println("Adding documents ...");
 
-      addDocument(fluoClient, "00001", "hello world welcome to the fluo quickstart the first one in the entire world");
-      addDocument(fluoClient, "00001", "hola world welcome to the fluo quickstart the first one in the entire world");
+      addDocument(fluoClient, "00001",
+          "hello world welcome to the fluo quickstart the first one in the entire world");
+      addDocument(fluoClient, "00001",
+          "hola world welcome to the fluo quickstart the first one in the entire world");
       addDocument(fluoClient, "00002", "hola world");
 
       System.out.println("Reading documents ...");
