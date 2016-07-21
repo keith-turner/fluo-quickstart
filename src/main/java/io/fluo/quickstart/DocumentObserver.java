@@ -18,12 +18,12 @@ package io.fluo.quickstart;
 
 import java.util.Map;
 
-import io.fluo.api.data.Bytes;
-import io.fluo.api.data.Column;
-import io.fluo.api.types.TypedObserver;
-import io.fluo.api.types.TypedSnapshotBase.Value;
-import io.fluo.api.types.TypedTransactionBase;
 import org.apache.commons.collections4.map.DefaultedMap;
+import org.apache.fluo.api.data.Bytes;
+import org.apache.fluo.api.data.Column;
+import org.apache.fluo.recipes.core.types.TypedObserver;
+import org.apache.fluo.recipes.core.types.TypedSnapshotBase.Value;
+import org.apache.fluo.recipes.core.types.TypedTransactionBase;
 
 /**
  * A simple observer that updates word counts when a documents contents are updated.

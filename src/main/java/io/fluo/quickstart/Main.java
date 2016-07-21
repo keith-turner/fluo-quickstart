@@ -17,24 +17,20 @@
 package io.fluo.quickstart;
 
 import java.io.File;
-import java.util.Map.Entry;
 
 import com.google.common.io.Files;
-import io.fluo.api.client.FluoClient;
-import io.fluo.api.client.FluoFactory;
-import io.fluo.api.client.Snapshot;
-import io.fluo.api.config.FluoConfiguration;
-import io.fluo.api.config.ObserverConfiguration;
-import io.fluo.api.config.ScannerConfiguration;
-import io.fluo.api.data.Bytes;
-import io.fluo.api.data.Column;
-import io.fluo.api.data.Span;
-import io.fluo.api.iterator.ColumnIterator;
-import io.fluo.api.iterator.RowIterator;
-import io.fluo.api.mini.MiniFluo;
-import io.fluo.api.types.TypedSnapshot;
-import io.fluo.api.types.TypedTransaction;
 import org.apache.commons.io.FileUtils;
+import org.apache.fluo.api.client.FluoClient;
+import org.apache.fluo.api.client.FluoFactory;
+import org.apache.fluo.api.client.Snapshot;
+import org.apache.fluo.api.client.scanner.CellScanner;
+import org.apache.fluo.api.config.FluoConfiguration;
+import org.apache.fluo.api.config.ObserverConfiguration;
+import org.apache.fluo.api.data.RowColumnValue;
+import org.apache.fluo.api.data.Span;
+import org.apache.fluo.api.mini.MiniFluo;
+import org.apache.fluo.recipes.core.types.TypedSnapshot;
+import org.apache.fluo.recipes.core.types.TypedTransaction;
 
 import static io.fluo.quickstart.DocumentObserver.CONTENT_COL;
 
@@ -71,21 +67,13 @@ public class Main {
   private static void printWordCounts(FluoClient fluoClient) throws Exception {
     // Use try with resource to ensure snapshot is closed.
     try (Snapshot snapshot = fluoClient.newSnapshot()) {
-      ScannerConfiguration scanConfig = new ScannerConfiguration();
-      scanConfig.setSpan(Span.prefix("word:"));
-
-      RowIterator rowIter = snapshot.get(scanConfig);
-
-      while (rowIter.hasNext()) {
-        Entry<Bytes,ColumnIterator> row = rowIter.next();
-        ColumnIterator colIter = row.getValue();
-        while (colIter.hasNext()) {
-          Entry<Column,Bytes> column = colIter.next();
-          System.out.println(row.getKey() + " " + column.getValue());
-        }
+      CellScanner scanner = snapshot.scanner().over(Span.prefix("word:")).build();
+    	
+      for(RowColumnValue item : scanner) {
+        System.out.println(item.getsRow()+ " " + item.getsValue());
       }
-
     }
+    
   }
 
   public static void main(String[] args) throws Exception {
@@ -142,6 +130,5 @@ public class Main {
 
     FileUtils.deleteQuietly(miniAccumuloDir);
   }
-
 
 }
