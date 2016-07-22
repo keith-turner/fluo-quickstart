@@ -13,7 +13,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <accumulo.version>1.6.4</accumulo.version>
-    <fluo.version>1.0.0-beta-2</fluo.version>
+    <fluo.version>1.0.0-incubating-SNAPSHOT</fluo.version>
+    <fluo-recipes.version>1.0.0-incubating-SNAPSHOT</fluo-recipes.version>
   </properties>
 
   <build>
@@ -59,18 +60,18 @@
       <version>1.32</version>
     </dependency>
     <dependency>
-      <groupId>io.fluo</groupId>
+      <groupId>org.apache.fluo</groupId>
       <artifactId>fluo-api</artifactId>
       <version>${fluo.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.fluo</groupId>
+      <groupId>org.apache.fluo</groupId>
       <artifactId>fluo-core</artifactId>
       <version>${fluo.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>io.fluo</groupId>
+      <groupId>org.apache.fluo</groupId>
       <artifactId>fluo-mini</artifactId>
       <version>${fluo.version}</version>
       <scope>test</scope>
@@ -86,6 +87,11 @@
       <version>2.4</version>
     </dependency>
 
+    <dependency>
+    	<groupId>org.apache.fluo</groupId>
+    	<artifactId>fluo-recipes-core</artifactId>
+    	<version>${fluo-recipes.version}</version>
+    </dependency>
   </dependencies>
 
 </project>

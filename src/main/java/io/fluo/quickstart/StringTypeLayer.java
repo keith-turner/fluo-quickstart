@@ -16,8 +16,8 @@
 
 package io.fluo.quickstart;
 
-import io.fluo.api.types.StringEncoder;
-import io.fluo.api.types.TypeLayer;
+import org.apache.fluo.recipes.core.types.StringEncoder;
+import org.apache.fluo.recipes.core.types.TypeLayer;
 
 public class StringTypeLayer extends TypeLayer {
 
